@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/e342c8a50b.js" crossorigin="anonymous"></script>
+    <title></title>
+</head>
+
+<body>
+
+    <section>
+        <div class="left-div">
+            <br>
+            <h3 class="logo" style="font-size: 20px;">Deteccion de Sonidos Peligrosos</h3>
+            <hr class="hr" />
+            <ul class="nav">
+                <li><a href=""><i class="fa fa-th-large"></i> Inicio</a></li>
+                <li class="active"><a href=""><i class="fa-solid fa-microphone"></i> Monitoreo en Vivo</a></li>
+                <li><a href="/statistics"><i class="fa-solid fa-chart-simple"></i> Estadisticas</a></li>
+                <li><a href=""><i class="fa-solid fa-bell"></i> Historial de alertas</a></li>
+                <li><a href=""><i class="fa fa-gear"></i> Configuracion</a></li>
+                <li><a href=""><i class="fa fa-bullhorn"></i> Soporte y ayuda</a></li>
+                <li><a href=""><i class="fa fa-power-off"></i> Salir</a></li>
+            </ul>
+        </div>
+
+        <div class="right-div">
+            <div id="main">
+                <br>
+                <div class="head">
+                    <div class="col-div-6">
+                        <p class="nav" style="font-weight: 600; "> Monitoreo en Vivo</p>
+                    </div>
+
+                    <div class="col-div-6">
+                        <div class="profile" style="position: relative; z-index: 3;">
+                            <img src="{{ url_for('static', filename='img/man.png') }}" class="pro-img" />
+                            <p>Rodrigo Rosario <i class="fa fa-ellipsis-v dots" aria-hidden="true"></i></p>
+                            <div class="profile-div">
+                                <p style="font-size: 13px;"><i class="fa fa-user"></i> Perfil</p>
+                                <p style="font-size: 13px;"><i class="fa fa-cogs"></i> Configuracion</p>
+                                <p style="font-size: 13px;"><i class="fa fa-power-off"></i> Cerrar sesión</p>
+                            </div>
+                        </div>
+                        <div class="icon-notifications" onclick="toggleNotifi()">
+                            <i class="fa-regular fa-bell fa-2xl"></i><span class="number-alerts">17</span>
+                        </div>
+                    </div>
+
+                    <div class="notifi-box" id="box-notification-alert">
+                        <h2 class="notifications-sounds-alerts">Notificaciones<span
+                                class="notifications-sounds-alerts-numbers"> 17</span></h2>
+                        <div class="notifi-item">
+                            <img src="{{ url_for('static', filename='img/alert.png') }}" alt="img">
+                            <div class="text">
+                                <h4>Fuga de gas</h4>
+                                <p>Fecha: 10/11/2023</p>
+                            </div>
+                        </div>
+
+                        <div class="notifi-item">
+                            <img src="{{ url_for('static', filename='img/alert.png') }}" alt="img">
+                            <div class="text">
+                                <h4>Cristal rompiendose</h4>
+                                <p>Fecha: 10/11/2023</p>
+                            </div>
+                        </div>
+
+                        <div class="notifi-item">
+                            <img src="{{ url_for('static', filename='img/alert.png') }}" alt="img">
+                            <div class="text">
+                                <h4>llorando</h4>
+                                <p>Fecha: 10/11/2023</p>
+                            </div>
+                        </div>
+
+                        <div class="notifi-item">
+                            <img src="{{ url_for('static', filename='img/alert.png') }}" alt="img">
+                            <div class="text">
+                                <h4>Disparos</h4>
+                                <p>Fecha: 10/11/2023</p>
+                            </div>
+                        </div>
+
+                        <div class="notifi-item">
+                            <img src="{{ url_for('static', filename='img/alert.png') }}" alt="img">
+                            <div class="text">
+                                <h4>Gritos</h4>
+                                <p>Fecha: 10/11/2023</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="container">
+                    <div class="clock">
+                        <div class="clock__circle">
+                            <div class="clock__rounder"></div>
+                            <div class="clock__hour" id="clock-hour"></div>
+                            <div class="clock__minutes" id="clock-minutes"></div>
+                        </div>
+
+                        <div>
+                            <div class="clock__date">
+                                <span class="clock__day-week" id="date-day-week"></span>
+
+                                <div>
+                                    <span class="clock__month" id="date-month"></span>
+                                    <span class="clock__day" id="date-day"></span>
+                                    <span class="clock__year" id="date-year"></span>
+                                </div>
+                            </div>
+
+                            <div class="clock__text">
+                                <span class="clock__text-hour" id="text-hour"></span>
+                                <span class="clock__text-minutes" id="text-minutes"></span>
+                                <span class="clock__text-seconds" id="text-seconds"></span>
+                                <span class="clock__text-ampm" id="text-ampm"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="Main">
+                    <div class="container_microphone">
+                        <button class="pulse"></button>
+
+                        <button class="pulse size3"></button>
+                        <button class="pulse size2"></button>
+                        <button class="pulse size1"></button>
+                    </div>
+                </div>
+                <div class="wrapper">
+                    <div class="typing">
+                        <i class="fa-solid fa-microphone"></i>
+                        Detectando Sonido
+                    </div>
+                </div>
+                <button id="showAlert">Mostrar Alerta</button>
+                <div class="popup" style="display: none;">
+                    <div class="contentBox">
+                        <div class="close"></div>
+                        <div class="animate-alert-sound">
+                            <span></span>
+                            <div class="imgBx-alert ">
+                                <img src="#">
+                            </div>
+                        </div>
+                        <div class="content-detected" id="content-detect-sound-information">
+                            <div>
+                                <h3 style="color:#df0c0c; font-weight: 800;"><i class="fa-solid fa-triangle-exclamation"
+                                        style="color: #df0c0c;"></i> Alerta</h3>
+                                <h2 id="confianza-detected-sound">80<sup>%</sup><span> Prob.</span></h2>
+                                <p id="class-detect-sound" style="font-size: 1.5rem;">Fuego detectado </p>
+                                <a href="#">Ver Alerta</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
+    </section>
+
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+
+    
+    <script>
+        $(document).ready(function () {
+            $(".profile p").click(function () {
+                $(".profile-div").toggle();
+
+            });
+            $(".noti-icon").click(function () {
+                $(".notification-div").toggle();
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $('li').click(function () {
+            $('li').removeClass("active");
+            $(this).addClass("active");
+        });
+    </script>
+    <script type="text/javascript">
+
+        var popup = document.querySelector('.popup');
+        var close = document.querySelector('.close');
+        var showAlertButton = document.getElementById('showAlert');
+        var alertSoundUrl = "{{ url_for('static', filename='img/alert.mp3') }}";
+        var audio = new Audio(alertSoundUrl);
+
+        // Función para cerrar el popup
+        function closePopup() {
+            popup.style.display = "none";
+            audio.pause(); // Detiene el audio
+            audio.currentTime = 0; // Reinicia el audio al principio
+        }
+
+        // showAlertButton.addEventListener('click', function () {
+        function showPopup(clase_detectada, score) {
+            if (clase_detectada == "fuego") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/fuego.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#301934"
+                document.getElementById("class-detect-sound").innerHTML = "Fuego detectado"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1)+"<sup>%</sup><span>Prob.</span>"
+
+            }
+            else if (clase_detectada == "tormenta electrica") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/tormenta.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#1B263B"
+                document.getElementById("class-detect-sound").innerHTML = "Tormenta eléctrica detectada"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1)+"<sup>%</sup><span>Prob.</span>"
+            }
+            else if (clase_detectada == "golpe en puerta de madera") {
+                document.querySelector('.imgBx-alert img').src = "golpe.gif"
+            }
+            else if (clase_detectada == "fuga de agua") {
+                document.querySelector('.imgBx-alert img').src = "agua.gif"
+            }
+            else if (clase_detectada == "llorando") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/llorando.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#A9CCE3"
+                document.getElementById("class-detect-sound").innerHTML = "Llanto detectado"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1)+"<sup>%</sup><span>Prob.</span>"
+            }
+            else if (clase_detectada == "cristal rompiendose") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/cristal_rompiendose.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#000000"
+                document.getElementById("class-detect-sound").innerHTML = "Cristal rompiéndose detectado"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1)+"<sup>%</sup><span>Prob.</span>"
+            }
+            else if (clase_detectada == "disparos") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/disparos.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#5A5A5A"
+                document.getElementById("class-detect-sound").innerHTML = "Disparos detectados"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1)+"<sup>%</sup><span>Prob.</span>"
+            }
+            else if (clase_detectada == "fuegos artificiales") {
+                document.querySelector('.imgBx-alert img').src = "fuegos.gif"
+            }
+            else if (clase_detectada == "pasos") {
+                document.querySelector('.imgBx-alert img').src = "pasos.gif"
+            }
+            else if (clase_detectada == "fuga de gas") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/fuga_gas.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#FF9800"
+                document.getElementById("class-detect-sound").innerHTML = "Fuga de gas detectada"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1)+"<sup>%</sup><span>Prob.</span>"
+            }
+            else if (clase_detectada == "gritos") {
+                document.querySelector('.imgBx-alert img').src = "gritos.gif"
+            }
+            else if (clase_detectada == "perro") {
+                document.querySelector('.imgBx-alert img').src = "perro.gif"
+            }
+            popup.style.display = "block";
+            // audio.play();
+            setTimeout(closePopup, 5000);
+        }
+
+        close.addEventListener('click', closePopup);
+    </script>
+    <script>
+        dataListaClases = [];
+        async function updateSoundInfo() {
+            const response = await fetch('/get_audio_data');
+            const data = await response.json();
+            if (data.class !== 'none' && data.score > 0.85) {
+                // Si el sonido detectado es peligroso, muestra el popup
+                // dataListaClases.push(data.class);
+                showPopup(data.class, data.score); 
+                // if (dataListaClases.length == 3) {
+                    
+                //     dataListaClases = [];
+                // }
+            }
+        }
+
+        setInterval(updateSoundInfo, 1000); // Actualiza cada segundo
+    </script>
+</body>
+
+</html>

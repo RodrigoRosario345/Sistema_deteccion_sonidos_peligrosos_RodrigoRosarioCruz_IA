@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detector de Sonido</title>
+</head>
+<body>
+    <h1>Detector de Sonido con YAMNet</h1>
+    <div id="sound-info"></div>
+    <script>
+        async function updateSoundInfo() {
+            const response = await fetch('/get_audio_data');
+            const data = await response.json();
+            if(data.class !== 'none') {
+                document.getElementById('sound-info').innerText = `Sonido detectado: ${data.class}, Confianza: ${data.score}`;
+            }
+        }
+
+        setInterval(updateSoundInfo, 1000); // Actualiza cada segundo
+    </script>
+</body>
+</html>

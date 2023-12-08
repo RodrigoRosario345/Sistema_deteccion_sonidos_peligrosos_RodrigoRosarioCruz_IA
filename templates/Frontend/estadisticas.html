@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasboard sonidos</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+        integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style_monitoreo_vivo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/e342c8a50b.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/es.min.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ url_for('static', filename='css/style_monitoreo_tiempo_real.css') }}">
+
+
+</head>
+
+<body>
+    <div class="container-header-perfil">
+        <nav class="pefil-menu-alerts">
+            <h3 style="color: #fff; margin-left: 7rem;">Estadísticas</h3>
+            <div class="profile">
+                <div class="imgBx">
+                    <img src="{{ url_for('static', filename='img/user.png') }}">
+                </div>
+                <h3>Rodrigo Rosario<br><span>Desarrollador</span></h3>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li>
+                        <a href="#">
+                            <ion-icon name="person-outline"></ion-icon>Perfil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <ion-icon name="help-circle-outline"></ion-icon>Ayuda
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <ion-icon name="log-out-outline"></ion-icon>Cerrar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="container-sidebar-content">
+        <ul class="navigation">
+            <li class="{{ 'active' if request.path == '/' else '' }}">
+                <a href="/">
+                    <span class="icon"><ion-icon name="mic-outline"></ion-icon></span>
+                    <span class="text">Monitoreo en Vivo</span>
+                </a>
+            </li>
+            <li class="{{ 'active' if request.path == '/estadisticas' else '' }}">
+                <a href="/estadisticas">
+                    <span class="icon"><ion-icon name="stats-chart-outline"></ion-icon></span>
+                    <span class="text">Estadísticas</span>
+                </a>
+            </li>
+            <li class="{{ 'active' if request.path == '/configuracion' else '' }}">
+                <a href="/configuracion">
+                    <span class="icon"><ion-icon name="settings-outline"></ion-icon></span>
+                    <span class="text">Configuración</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="container-estadisticas-totales">
+            <div class="container-datos-generales">
+                <div class="datos-generales">
+                    <div class="box-datos-generales">
+                        <p class="head-1">Sonidos peligrosoos detectados</p>
+                        <p id="numeros-sonidos-peligrosos-detectados" class="number">300</p>
+                        <i class="fa fa-exclamation-triangle box-icon" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="datos-generales">
+                    <div class="box-datos-generales">
+                        <p class="head-1">Clases detectados</p>
+                        <p id="numeros-clases-peligrosos-detectados" class="number">5</p>
+                        <i class="fa fa-tags box-icon" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="datos-generales">
+                    <div class="box-datos-generales">
+                        <p class="head-1">Promedio Confianza deteccion</p>
+                        <p id="confiaza-sonidos-detectados" class="number">99%</p>
+                        <i class="fa fa-line-chart box-icon" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="distribucion-num-confianza">
+                <div class="clases-detectadas-1">
+                    <canvas id="sonidosDonaChart"></canvas>
+                </div>
+                <div class="filter-confiaza">
+                    <form id="filtroForm">
+                        <label for="claseSonido">Clase Sonido:</label>
+                        <select class="input-select-clases" id="claseSonido" name="claseSonido">
+                            <option value="">Todas</option>
+                            <option value="fuego">Fuego</option>
+                            <option value="gritos">Gritos</option>
+                            <option value="llorando">Llanto</option>
+                            <option value="fuga de gas">Fuga de Gas</option>
+                            <option value="cristal rompiendose">Cristal Rompiéndose</option>
+                        </select>
+
+                        <label for="confianzaMin">Confianza mín.:</label>
+                        <input class="input-min-max" type="number" id="confianzaMin" name="confianzaMin" min="0" max="1"
+                            step="0.1">
+
+                        <label for="confianzaMax">Confianza máx.:</label>
+                        <input class="input-min-max" type="number" id="confianzaMax" name="confianzaMax" min="0" max="1"
+                            step="0.1">
+
+                        <button class="button-enviar" type="submit">Filtrar</button>
+                    </form>
+                    <div class="clases-detectadas-2">
+                        <canvas id="promedioConfianzaChart"></canvas>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="fechas-incidentes-num-detected">
+                <div class="filter-cantidad-detected">
+                    <form id="filtroForm-numeros-detecteciones">
+                        <label for="topN">Top N clases:</label>
+                        <input class="input-top-class" type="number" id="topN" name="topN" min="1" value="5">
+
+                        <label for="claseSonidoFiltro">Clase Sonido:</label>
+                        <select class="input-select-clases" id="claseSonidoFiltro" name="claseSonido">
+                            <option value="">Todas</option>
+                            <option value="fuego">Fuego</option>
+                            <option value="gritos">Gritos</option>
+                            <option value="llorando">Llanto</option>
+                            <option value="fuga de gas">Fuga de Gas</option>
+                            <option value="cristal rompiendose">Cristal Rompiéndose</option>
+                        </select>
+
+                        <button class="button-enviar" type="submit">Filtrar</button>
+                    </form>
+                    <div class="clases-detectadas-3">
+                        <canvas id="myChart-class-detected"></canvas>
+                    </div>
+                </div>
+                <div class="datetime-stadist-sound">
+                    <div class="filter-conf-detected">
+                        <form id="filtroForm-incidentes-fecha">
+                            <label for="fechaInicio">Fecha de inicio:</label>
+                            <input class="input-fecha" type="date" id="fechaInicio" name="fechaInicio">
+
+                            <label for="fechaFin">Fecha de fin:</label>
+                            <input class="input-fecha" type="date" id="fechaFin" name="fechaFin">
+
+                            <button class="button-enviar" type="submit">Filtrar</button>
+                        </form>
+                        <div class="container-statics-datetime">
+                            <div class="clases-detectadas-4">
+                                <canvas id="incidentesTiempoChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $.getJSON('/total-sonidos-detectados', function (data) {
+                $('#numeros-sonidos-peligrosos-detectados').text(data.total);
+            });
+
+            $.getJSON('/total-clases-detectadas', function (data) {
+                $('#numeros-clases-peligrosos-detectados').text(data.total_clases);
+            });
+
+            $.getJSON('/total-promedio-confianza', function (data) {
+                $('#confiaza-sonidos-detectados').text(data.promedio_confianza);
+            });
+        });
+
+        $(document).ready(function () {
+            var myChart; // Referencia al gráfico para poder destruirlo más tarde si es necesario
+
+            function obtenerDatosYCrearGrafico(filtros) {
+                if (myChart) {
+                    myChart.destroy();
+                }
+
+                $.getJSON('/datos', filtros, function (data) {
+                    var labels = data.map(function (e) { return e.clase_sonido; });
+                    var counts = data.map(function (e) { return e.numero_de_detecciones; });
+                    var backgroundColors = [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        // ... puedes añadir más colores si tienes más clases de sonido
+                    ];
+
+                    var ctx = document.getElementById('myChart-class-detected').getContext('2d');
+                    myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Número de Detecciones',
+                                data: counts,
+                                backgroundColor: backgroundColors,
+                                borderColor: backgroundColors.map(color => color.replace('0.5', '1')),
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1,
+                                        callback: function (value) {
+                                            if (value % 1 === 0) { return value; }
+                                        }
+                                    }
+                                },
+                                // Configuraciones adicionales del gráfico...
+                            },
+                            // Otras opciones como plugins, leyendas, etc.
+                        }
+                    });
+                });
+            }
+
+            // Formulario de filtros
+            $('#filtroForm-numeros-detecteciones').on('submit', function (e) {
+                e.preventDefault();
+                // Obtiene los valores de los filtros
+                var claseSonido = $('#claseSonidoFiltro').val() || ''; // Si no se selecciona nada, se envía cadena vacía
+                var topN = $('#topN').val() || ''; // Si no se selecciona nada, se envía cadena vacía
+
+                // Llama a la función con los filtros aplicados
+                obtenerDatosYCrearGrafico({ claseSonido: claseSonido, topN: topN });
+            });
+
+            // Inicializa el gráfico con todos los datos
+            obtenerDatosYCrearGrafico({}); // Sin filtros aplicados
+        });
+
+
+        $(document).ready(function () {
+            var promedioConfianzaChart;
+
+            // Esta función obtiene los datos y crea/actualiza el gráfico.
+            function obtenerYActualizarGrafico(claseSonido, confianzaMin, confianzaMax) {
+                // Destruye el gráfico existente si ya hay uno
+                if (promedioConfianzaChart) {
+                    promedioConfianzaChart.destroy();
+                }
+
+                // Actualiza la URL con los parámetros de filtro
+                var url = '/promedio-confianza';
+                var params = { claseSonido: claseSonido, confianzaMin: confianzaMin, confianzaMax: confianzaMax };
+                $.getJSON(url, params, function (data) {
+                    var labels = data.map(function (e) { return e.clase_sonido; });
+                    var promedios = data.map(function (e) { return e.promedio_confianza; });
+
+                    // Define un arreglo de colores.
+                    var backgroundColors = [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        // ... puedes añadir más colores si tienes más clases de sonido
+                    ];
+
+                    var ctx = document.getElementById('promedioConfianzaChart').getContext('2d');
+                    promedioConfianzaChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Nivel de Confianza Promedio',
+                                data: promedios,
+                                backgroundColor: backgroundColors,
+                                borderColor: backgroundColors.map(color => color.replace('1', '1')),
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    stepSize: 0.1
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+
+            // Evento submit del formulario de filtros
+            $('#filtroForm').on('submit', function (e) {
+                e.preventDefault();
+                var claseSonido = $('#claseSonido').val();
+                var confianzaMin = $('#confianzaMin').val() || 0; // Si no se proporciona, usar 0
+                var confianzaMax = $('#confianzaMax').val() || 1; // Si no se proporciona, usar 1
+                obtenerYActualizarGrafico(claseSonido, confianzaMin, confianzaMax);
+            });
+
+            // Carga inicial del gráfico
+            obtenerYActualizarGrafico('', '', ''); // Llama a la función con valores predeterminados o vacíos
+        });
+
+        moment.locale('es');
+
+        $(document).ready(function () {
+            var incidentesTiempoChart;
+
+            // Función para obtener los datos y crear el gráfico
+            function obtenerDatosYCrearGrafico(fechaInicio, fechaFin) {
+                if (incidentesTiempoChart) {
+                    incidentesTiempoChart.destroy();
+                }
+
+                $.getJSON('/incidentes-tiempo', { fechaInicio: fechaInicio, fechaFin: fechaFin }, function (data) {
+                    var fechas = data.map(function (e) { return moment(e.fecha).format('D MMM YYYY'); });
+                    var cantidades = data.map(function (e) { return e.cantidad; });
+
+                    var ctx = document.getElementById('incidentesTiempoChart').getContext('2d');
+                    incidentesTiempoChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: fechas,
+                            datasets: [{
+                                label: 'Incidentes por Fecha',
+                                data: cantidades,
+                                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                                borderColor: 'rgba(0, 123, 255, 1)',
+                                borderWidth: 1,
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                xAxes: [{
+                                    type: 'time',
+                                    time: {
+                                        parser: 'D MMM YYYY',
+                                        tooltipFormat: 'll',
+                                        unit: 'day',
+                                        displayFormats: {
+                                            day: 'D MMM'
+                                        }
+                                    },
+                                    ticks: {
+                                        maxRotation: 0
+                                    }
+                                }],
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                });
+            }
+
+            // Evento de envío de formulario para filtrar datos
+            $('#filtroForm-incidentes-fecha').on('submit', function (e) {
+                e.preventDefault();
+                var fechaInicio = $('#fechaInicio').val();
+                var fechaFin = $('#fechaFin').val();
+                obtenerDatosYCrearGrafico(fechaInicio, fechaFin);
+            });
+
+            // Inicialización de la página con todos los datos
+            obtenerDatosYCrearGrafico('', ''); // Llama a la función sin fechas para cargar todos los datos
+        });
+
+        $(document).ready(function () {
+            $.getJSON('/sonidos-distribucion', function (data) {
+                var total = data.reduce((sum, item) => sum + item.cantidad, 0); // Calcula el total de sonidos detectados
+                var labels = data.map(item => item.clase_sonido);
+                var cantidades = data.map(item => item.cantidad);
+                var backgroundColors = []; // Define un arreglo de colores para tus datos
+
+                // Define colores aleatorios para cada tipo de sonido detectado
+                for (let i = 0; i < labels.length; i++) {
+                    backgroundColors.push(`hsl(${360 / labels.length * i}, 70%, 50%)`);
+                }
+
+                var ctx = document.getElementById('sonidosDonaChart').getContext('2d');
+                var sonidosDonaChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Distribución de Sonidos Detectados',
+                            data: cantidades,
+                            backgroundColor: backgroundColors,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Distribución de Sonidos Detectados'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        let label = tooltipItem.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        const val = tooltipItem.parsed;
+                                        const percent = (val / total * 100).toFixed(2); // Calcula el porcentaje
+                                        label += `${val} (${percent}%)`;
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    },
+                });
+            });
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasboard sonidos</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+        integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style_monitoreo_vivo.css">
+    <script src="https://kit.fontawesome.com/e342c8a50b.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ url_for('static', filename='css/style_monitoreo_tiempo_real.css') }}">
+
+</head>
+
+<body>
+    <div class="container-header-perfil">
+        <nav class="pefil-menu-alerts">
+            <h3 style="color: #fff; margin-left: 7rem;">Monitoreo en Vivo</h3>
+            <div class="profile">
+                <div class="imgBx">
+                    <img src="{{ url_for('static', filename='img/user.png') }}">
+                </div>
+                <h3>Rodrigo Rosario<br><span>Desarrollador</span></h3>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li>
+                        <a href="#">
+                            <ion-icon name="person-outline"></ion-icon>Perfil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <ion-icon name="help-circle-outline"></ion-icon>Ayuda
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <ion-icon name="log-out-outline"></ion-icon>Cerrar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="container-sidebar-content">
+        <ul class="navigation">
+            <li class="{{ 'active' if request.path == '/' else '' }}">
+                <a href="/">
+                    <span class="icon"><ion-icon name="mic-outline"></ion-icon></span>
+                    <span class="text">Monitoreo en Vivo</span>
+                </a>
+            </li>
+
+            <li class="{{ 'active' if request.path == '/estadisticas' else '' }}">
+                <a href="/estadisticas">
+                    <span class="icon"><ion-icon name="stats-chart-outline"></ion-icon></span>
+                    <span class="text">Estadísticas</span>
+                </a>
+            </li>
+            <li class="{{ 'active' if request.path == '/configuracion' else '' }}">
+                <a href="/configuracion">
+                    <span class="icon"><ion-icon name="settings-outline"></ion-icon></span>
+                    <span class="text">Configuración</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="content-monitoreo-vivo">
+            <div class="data-time-real-time">
+                <div class="clock">
+                    <div class="digital" style="--clr:#ff2972;">
+                        <div class="screen" data-text="Horas">
+                            <div class="time">
+                                <div id="hour"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="digital" style="--clr:#fee800;">
+                        <div class="screen" data-text="Minutos">
+                            <div class="time">
+                                <div id="minutes"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="digital" style="--clr:#04fc43;">
+                        <div class="screen" data-text="Segundos">
+                            <div class="time">
+                                <div id="seconds"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="digital">
+                        <div class="box-time-sound-detected" id="hr" style="--clr:#ff2972;"></div>
+                        <div class="box-time-sound-detected" id="mn" style="--clr:#fee800;"></div>
+                        <div class="box-time-sound-detected" id="sc" style="--clr:#04fc43;"></div>
+                        <div id="ampm"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="line-separator-sound-detector">
+                <div class="loader-detected"></div>
+            </div>
+
+            <div class="cuadro-enmarcado">
+                <div class="box-cuadro-enmarcado">
+                    <div class="container-microphone-activate">
+                        <div class="loader">
+                            <div class="rocket">
+                                <i class="fa-solid fa-microphone-lines fa-2xl"
+                                    style="color: #000; font-size: 3rem;"></i>
+                                <i class="fa-solid fa-music" style="--i:0; color: #2b78fd;"></i>
+                                <i class="fa-solid fa-music" style="--i:1; color: #2b78fd;"></i>
+                                <i class="fa-solid fa-music" style="--i:2; color: #2b78fd;"></i>
+                                <i class="fa-solid fa-music" style="--i:3; color: #2b78fd;"></i>
+                            </div>
+                            <span><i></i></span>
+                        </div>
+                        <div class="center-form_sound-text_detect">
+                            <div class="form-sound">
+                                <div class='sound-wave'>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                    <div class='bar'></div>
+                                </div>
+                            </div>
+                            <div class="container-text-detected-sound">
+                                <h2 class="text-detected-sound" id="text">Detectando Sonidos</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="popup" style="display: none;">
+                <div class="contentBox">
+                    <div class="close"></div>
+                    <div class="animate-alert-sound">
+                        <span></span>
+                        <div class="imgBx-alert ">
+                            <img src="#">
+                        </div>
+                    </div>
+                    <div class="content-detected" id="content-detect-sound-information">
+                        <div class="cuerpo-text-detected-sound">
+                            <h3 style="color:#df0c0c; font-weight: 800;"><i class="fa-solid fa-triangle-exclamation"
+                                    style="color: #df0c0c;"></i> Alerta</h3>
+                            <h2 id="confianza-detected-sound">80<sup>%</sup><span> Prob.</span></h2>
+                            <p id="class-detect-sound" style="font-size: 1.5rem;">Fuego detectado </p>
+                            <a href="#">Ver Alerta</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script type="text/javascript">
+
+        var popup = document.querySelector('.popup');
+        var close = document.querySelector('.close');
+        var showAlertButton = document.getElementById('showAlert');
+        var alertSoundUrl = "{{ url_for('static', filename='img/alert.mp3') }}";
+        var audio = new Audio(alertSoundUrl);
+
+        // Función para cerrar el popup
+        function closePopup() {
+            popup.style.display = "none";
+            audio.pause(); // Detiene el audio
+            audio.currentTime = 0; // Reinicia el audio al principio
+        }
+
+        // showAlertButton.addEventListener('click', function () {
+        function showPopup(clase_detectada, score) {
+            if (clase_detectada == "fuego") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/fuego.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#301934"
+                document.getElementById("class-detect-sound").innerHTML = "Fuego detectado"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1) + "<sup>%</sup><span>Prob.</span>"
+
+            }
+            else if (clase_detectada == "tormenta_electrica") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/tormenta.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#1B263B"
+                document.getElementById("class-detect-sound").innerHTML = "Tormenta eléctrica detectada"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1) + "<sup>%</sup><span>Prob.</span>"
+            }
+            else if (clase_detectada == "golpe en puerta de madera") {
+                document.querySelector('.imgBx-alert img').src = "golpe.gif"
+            }
+            else if (clase_detectada == "llorar") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/llorando.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#A9CCE3"
+                document.getElementById("class-detect-sound").innerHTML = "Llanto detectado"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1) + "<sup>%</sup><span>Prob.</span>"
+            }
+            else if (clase_detectada == "cristal_roto") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/cristal_rompiendose.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#000000"
+                document.getElementById("class-detect-sound").innerHTML = "Cristal rompiéndose detectado"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1) + "<sup>%</sup><span>Prob.</span>"
+            }
+            else if (clase_detectada == "disparos") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/disparos.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#5A5A5A"
+                document.getElementById("class-detect-sound").innerHTML = "Disparos detectados"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1) + "<sup>%</sup><span>Prob.</span>"
+            }
+            else if (clase_detectada == "fuga_gas") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/fuga_gas.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#FF9800"
+                document.getElementById("class-detect-sound").innerHTML = "Fuga de gas detectada"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1) + "<sup>%</sup><span>Prob.</span>"
+            }
+            else if (clase_detectada == "gritos") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/gritos.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#C9CD7F"
+                document.getElementById("class-detect-sound").innerHTML = "Gritos detectados"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1) + "<sup>%</sup><span>Prob.</span>"
+            }
+            else if (clase_detectada == "perro") {
+                document.querySelector('.imgBx-alert img').src = "{{ url_for('static', filename='img/ladrido_perro.gif') }}"
+                document.querySelector('.animate-alert-sound').style.backgroundColor = "#737373"
+                document.getElementById("class-detect-sound").innerHTML = "Ladrido de perro detectado"
+                document.getElementById("confianza-detected-sound").innerHTML = (score * 100).toFixed(1) + "<sup>%</sup><span>Prob.</span>"
+            }
+            popup.style.display = "block";
+            // audio.play();
+            setTimeout(closePopup, 5000);
+        }
+
+        close.addEventListener('click', closePopup);
+    </script>
+    <script>
+        dataListaClases = [];
+        let ultimaClasePredicha = null;
+        let contadorClase = 0;
+        async function updateSoundInfo() {
+            const response = await fetch('/get_audio_data');
+            const data = await response.json();
+            console.log(data.class, data.score);
+            // Verificar si la clase predicha es la misma que la última y si la confianza es alta
+            if (data.class !== 'none') {
+                if (data.class === ultimaClasePredicha) {
+                    contadorClase++;
+                } else {
+                    ultimaClasePredicha = data.class;
+                    contadorClase = 1;  // Reiniciar el contador si la clase cambia
+                }
+
+                // Mostrar el popup solo si la misma clase se ha repetido el número deseado de veces
+                if (contadorClase >= 2 && data.class !== 'none') {
+                    showPopup(data.class, data.score);
+                    contadorClase = 0;  // Opcional: Reiniciar el contador después de mostrar el popup
+                }
+            }
+        }
+
+        setInterval(updateSoundInfo, 1000); // Actualiza cada segundo
+    </script>
+</body>
+
+</html>
