@@ -1,6 +1,6 @@
 # Sistema de Detección de Sonidos Peligrosos en Tiempo Real
 
-Aplicación de **Inteligencia Artificial** diseñada para detectar y clasificar sonidos en tiempo real en entornos domésticos. Utilizando técnicas de procesamiento de señales de audio y aprendizaje automático con **Swin Transformers**, la aplicación identifica patrones asociados con sonidos seguros y peligrosos, proporcionando alertas inmediatas en caso de detectar situaciones potencialmente riesgosas.
+Aplicación de **Inteligencia Artificial** diseñada para detectar y clasificar sonidos en tiempo real en entornos domésticos. Utilizando técnicas de procesamiento de señales de audio y aprendizaje automático con **HTS-Audio-Transformer**, la aplicación identifica patrones asociados con sonidos seguros y peligrosos, proporcionando alertas inmediatas en caso de detectar situaciones potencialmente riesgosas.
 
 ## ¿Qué resuelve?
 
@@ -14,7 +14,7 @@ Aplicación de **Inteligencia Artificial** diseñada para detectar y clasificar 
 | --- | --- |
 | **Captura de Audio en Tiempo Real** | Adquisición de datos de audio desde micrófonos y dispositivos de captura. |
 | **Preprocesamiento de Audio** | Filtrado de ruido, normalización y segmentación del audio capturado. |
-| **Detección Inteligente** | Análisis del audio mediante Swin Transformers para clasificar sonidos seguros y peligrosos. |
+| **Detección Inteligente** | Análisis del audio mediante HTS-Audio-Transformer para clasificar sonidos seguros y peligrosos. |
 | **Sistema de Alertas** | Notificaciones inmediatas en la interfaz de usuario cuando se detecta un peligro. |
 | **Dashboard de Monitoreo** | Interfaz gráfica para visualizar alertas y acceder a estadísticas en tiempo real. |
 | **Estadísticas y Reportes** | Filtrado de sonidos reportados por tipo y fecha. |
@@ -37,7 +37,7 @@ Aplicación de **Inteligencia Artificial** diseñada para detectar y clasificar 
 
 * **Backend:** Python (Flask)
 * **Frontend:** HTML, CSS, JavaScript
-* **Modelo de IA:** Swin Transformers (HT-SAT)
+* **Modelo de IA:** HTS-Audio-Transformer (HT-SAT)
 * **Procesamiento de Audio:** Librosa, NumPy
 * **Deep Learning:** PyTorch
 
@@ -110,7 +110,7 @@ Recolección en tiempo real de datos de audio provenientes de micrófonos instal
 Eliminación de ruido, normalización del volumen y segmentación en intervalos manejables.
 
 ### Entrenamiento
-Uso de algoritmos de aprendizaje profundo con Swin Transformers para entrenar el modelo de clasificación.
+Uso de algoritmos de aprendizaje profundo con HTS-Audio-Transformer (HT-SAT) para entrenar el modelo de clasificación.
 
 ### Validación
 Validación exhaustiva utilizando un conjunto de datos de prueba independiente con ajustes para mejorar la precisión.
